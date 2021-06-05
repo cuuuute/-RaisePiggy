@@ -10,7 +10,8 @@ double gold=500;
 int day;
 int cnt,idx=0,start;
 
-typedef struct Pig{ //猪 
+typedef struct Pig//猪 
+{ 
 	int id;//编号 
 	int ty;//种类 
 	int growday;//饲养日期 
@@ -20,7 +21,8 @@ typedef struct Pig{ //猪
 	struct Pig *next;
 }Pig,*PigList;
 
-struct PigPen{//猪圈 
+struct PigPen//猪圈
+{ 
 	int sum;//有多少头猪
 	int a,b,c;//小花猪、大白花猪、黑猪的数量 
 	bool flag;//是否有黑猪 
@@ -30,11 +32,14 @@ struct PigPen{//猪圈
 string b[]={"","小花猪","大白花猪","黑猪"};
 
 //查找编号为id的猪 
-void find(PigList L,int id){
+void find(PigList L,int id)
+{
     Pig *p=L->next;
     int i=0;
-    while(p){
-    	if(p->id==id) {//找到后输出信息 
+    while(p)
+	{
+    	if(p->id==id)
+		 {//找到后输出信息 
     		cout<<"此猪为 ";	
 			if(p->ty==1)cout<<"小花猪，";
 			if(p->ty==2)cout<<"大白花猪，";
@@ -53,7 +58,8 @@ int getpen(int k)
 {
 	int x=-1;
 	//小花猪,大白花猪
-	if(k==1||k==2){
+	if(k==1||k==2)
+	{
 		for(int i=0;i<100;i++)
 		{
 			//从没有黑猪的猪圈里找猪数量最少的圈 
@@ -64,7 +70,8 @@ int getpen(int k)
 		if(x==-1||pigpen[x].sum==10)
 			return -1; 
 	}
-	else {//黑猪 
+	else //黑猪 
+	{
 		for(int i=0;i<100;i++)
 		{
 			//优先放入已经有黑猪并且没有满的猪圈 
@@ -74,7 +81,8 @@ int getpen(int k)
 			}	
 		}
 		//如果没有找到,找个空的分配给它 
-		for(int i=0;i<100;i++){
+		for(int i=0;i<100;i++)
+		{
 			if(pigpen[i].sum == 0)
 				return i;
 		}
@@ -84,7 +92,8 @@ int getpen(int k)
 }
 
 //加入小猪仔 
-PigList PigListInsert(PigList L) {
+PigList PigListInsert(PigList L) 
+{
     Pig *pre;                     
     pre = L;
     while( pre->next!=NULL )  
@@ -99,7 +108,8 @@ PigList PigListInsert(PigList L) {
 	p->pen = getpen(p->ty); //为小猪分配猪圈 
 	p->virus = -1;
 //	cout<<p->id<<' '<<p->ty<<' '<<p->growday<<' '<<p->weight<<' '<<p->pen<<endl; 
-	if(p->pen==-1) {
+	if(p->pen==-1) 
+	{
 		cout<<"猪圈已满/猪会打架,无法放入！！！"<<endl; 
 		return L;
 	}
@@ -121,7 +131,8 @@ PigList PigListInsert(PigList L) {
 }
 
 //加入固定种类的小猪  
-PigList PigListInsert(PigList L,int k) {
+PigList PigListInsert(PigList L,int k) 
+{
     Pig *pre;                     
     pre = L;
     while( pre->next!=NULL )  
@@ -136,7 +147,8 @@ PigList PigListInsert(PigList L,int k) {
 	p->pen = getpen(p->ty); //为小猪分配猪圈 
 	p->virus = -1;
 //	cout<<p->id<<' '<<p->ty<<' '<<p->growday<<' '<<p->weight<<' '<<p->pen<<endl; 
-	if(p->pen==-1) {
+	if(p->pen==-1) 
+	{
 		cout<<"猪圈已满/猪会打架,无法放入！！！"<<endl; 
 		return L;
 	}
@@ -158,7 +170,8 @@ PigList PigListInsert(PigList L,int k) {
 }
 
 //加入一只完全已知的猪猪 
-PigList Insert(PigList L,int id,int ty,int growday,int weight,int pen,int vr) {
+PigList Insert(PigList L,int id,int ty,int growday,int weight,int pen,int vr) 
+{
     Pig *pre;                     
     pre = L;
 	while( pre->next!=NULL )  
@@ -188,10 +201,12 @@ PigList Insert(PigList L,int id,int ty,int growday,int weight,int pen,int vr) {
 }
 
 //链表初始化
-PigList PigListInit() {
+PigList PigListInit() 
+{
     Pig *L;
     L = (Pig *)malloc(sizeof(Pig));   //申请结点空间
-    if(L==NULL){    //判断申请空间是否失败
+    if(L==NULL)
+	{    //判断申请空间是否失败
     	cout<<"申请空间失败!"<<endl; 
         exit(0);    //如果失败则退出程序
     }
@@ -203,7 +218,8 @@ bool vis[111];//猪圈感染名单，猪圈是否被感染
 bool v[1111];//猪猪死亡名单，猪是否死亡 
  
 //经过一天小猪重量增加k千克 
-PigList grow(PigList L,double k) {
+PigList grow(PigList L,double k) 
+{
     Pig *p=L->next;
     int i=0;
     while(p){
@@ -246,7 +262,8 @@ void remove(int x,int k,int t,int f)
 } 
  
 //出售所有可以出圈的猪 
-PigList sell(PigList L) {
+PigList sell(PigList L) 
+{
     
     freopen("output.txt","a",stdout);
     
@@ -298,7 +315,8 @@ PigList sell(PigList L) {
 }
 
 //删除死亡猪 
-PigList remove(PigList L,int x) {
+PigList remove(PigList L,int x)
+{
       
  	Pig *p,*pre;   //pre为前驱结点，p为查找的结点。
 	p = L;
@@ -327,14 +345,17 @@ void cla(PigList L,int k)
 	int mint=10000,maxt=0;//时间
 	int v[111]={0};//猪圈分布 
 	Pig *p=L->next;
-	if(p==NULL) {
+	if(p==NULL) 
+	{
 		cout<<"猪圈中没有此类猪!!!"<<endl; 
 		return;
 	}
     int i=0;
-    while(p){
+    while(p)
+	{
     	//找到了一个 
-    	if(p->ty==k) {
+    	if(p->ty==k) 
+		{
     		s++;//数量加一 
     		w+=p->weight;//总重量增加 
     		v[p->pen]=1;//标记它所在猪圈的编号
@@ -347,7 +368,8 @@ void cla(PigList L,int k)
 	if(k==2)cout<<"大白花猪";
 	if(k==3) cout<<"黑猪";
 	cout<<"的数量为"<<s;
-	if(s==0) {
+	if(s==0) 
+	{
 		cout<<endl<<endl;
 		return;
 	}
@@ -359,11 +381,14 @@ void cla(PigList L,int k)
 }
 
 //查找id为x的元素
-int ask(PigList L,int x) {
+int ask(PigList L,int x)
+{
     Pig *p=L->next;
     int i=0;
-    while(p){
-        if(p->id==x){
+    while(p)
+	{
+        if(p->id==x)
+		{
             return 1;
         }
         p=p->next;
@@ -371,11 +396,14 @@ int ask(PigList L,int x) {
     return 0;
 }
 //id为x的猪标记为生病 
-PigList replace(PigList L,int x) {
+PigList replace(PigList L,int x) 
+{
     Pig *p=L->next;
     int i=0;
-    while(p){
-        if(p->id==x&&p->virus==-1){
+    while(p)
+	{
+        if(p->id==x&&p->virus==-1)
+		{
             p->virus++;
             return L;
         }
@@ -388,7 +416,8 @@ PigList viru(PigList L)
 	
 	for(int i=0;i<100;i++)
 	{
-		if(vis[i]){
+		if(vis[i])
+		{
 			//本猪圈50%几率传染 
 			for(int j=0;j<pigpen[i].sum;j++)
 			{
@@ -426,10 +455,12 @@ PigList viru(PigList L)
 	} 
 	return L; 
 }
-void printList(PigList L){
+void printList(PigList L)
+{
     Pig *p=L->next;
     int i=0;
-    while(p){
+    while(p)
+	{
         cout<<p->id<<' '<<p->ty<<' '<<p->growday
 		<<' '<<p->weight<<' '<<p->pen<<' '<<p->virus<<endl; 
         p=p->next;
@@ -459,12 +490,13 @@ void page()
 }
 
 
-void cls()	//system("cls")清屏函数在我的电脑上发生了应用程序错误（地址为0xc0000142） 
-{			//因此我放弃了使用清屏函数，改用多空几行的解决办法 
+void cls()							//system("cls")清屏函数在我的电脑上发生了应用程序错误（地址为0xc0000142） 
+{									//因此我放弃了使用清屏函数，改用多空几行的解决办法 
 	cout<<"\n\n\n\n\n\n\n";
 }
 
-int main(){
+int main()
+{
 	time_t t;
 	srand((unsigned) time(&t));
 	
@@ -501,8 +533,10 @@ int main(){
 		page();	
 		int op;
 		cin>>op;
-		switch(op){
-       		case 1:{
+		switch(op)
+		{
+       		case 1:
+			{
        			cout<<"请输入生长天数: ";
 				int x;
 				cin>>x;
@@ -518,7 +552,8 @@ int main(){
 				//	printList(list);
 					Pig *p=list->next;
 				    int cnt=0;
-				    while(p){
+				    while(p)
+					{
 				        cnt++;
 				        p=p->next;
 				    }
@@ -530,15 +565,18 @@ int main(){
 						cout<<"请选择要购入的小猪: "<<endl;
 						cout<<"1.小花猪(400元一只) 2.大白花猪(300元一只) 3.黑猪(500元一只) 4.取消  （ps：商店出售的小猪仔是20-50kg的随机体重嗷~）"<<endl; 
 						cin>>x;
-						while(x>4){
+						while(x>4)
+						{
 							cout<<"无效输入,请重新选择: "; 
 							cin>>x;
 						} 
-						if(x>=1&&x<=3){
+						if(x>=1&&x<=3)
+						{
 							cout<<"请输入要购入的小猪数量: "; 
 							cin>>cnt;//=rand()%5+1;
 							if(a[x]*cnt>gold) cout<<"金币不足!"<<endl;
-							else {
+							else 
+							{
 								
 								freopen("output.txt","a",stdout);
 								gold -= a[x]*cnt;
@@ -546,10 +584,7 @@ int main(){
 								freopen("CON","a",stdout);
 								cout.clear();
 								cout<<"购入"<<b[x]<<cnt<<"只,钱包剩余金额为"<<gold<<"元。"<<endl;//控制台显示，告诉用户 
-								
-							
 							//	printList(list);
-								
 								while(cnt--)
 								{
 									PigListInsert(list,x);
@@ -590,21 +625,24 @@ int main(){
 
 				break;
 			}
-			case 3:{
+			case 3:
+			{
 				int x;
 				cout<<"请输入猪圈编号：";
    		      	cin>>x;
    		      	int br=0;
 				while(x<0||x>99)
 				{
-					if(x==-1) {
+					if(x==-1) 
+					{
 						br=1;
 						break;
 					}
 					cout<<"编号不合法,请重新输入(输入-1返回主页面): ";
 					cin>>x;
 				}
-				if(br) {
+				if(br) 
+				{
 					cls();	
 					page();	
 					break;
@@ -616,14 +654,16 @@ int main(){
 				cin>>x;
 				while(x<0||x>=pigpen[y].sum)
 				{
-					if(x==-1) {
+					if(x==-1) 
+					{
 						br=1;
 						break;
 					}
 					cout<<"编号不合法,请重新输入(输入-1返回主页面): ";
 					cin>>x;
 				}
-				if(br) {
+				if(br) 
+				{
 					cls();	
 					page();	
 					break;
@@ -632,13 +672,15 @@ int main(){
 				find(list,pigpen[y].pigid[x]);
 				break;
 			}
-			case 4:{
+			case 4:
+			{
 				cla(list,1);
 				cla(list,2);
 				cla(list,3);
 				break;
 			} 
-			case 5:{
+			case 5:
+			{
 				freopen("output.txt","r",stdin);
 				string s;
 				while(cin>>s) cout<<s<<endl;
@@ -647,7 +689,8 @@ int main(){
 				
 				break;
 			}
-			case 6:{
+			case 6:
+			{
 				int x=rand()%idx+1;
 				while(ask(list,x)==0)
 					x=rand()%idx;
@@ -656,7 +699,8 @@ int main(){
 				list=replace(list,x);//x号得猪瘟 
 				break;
 			}	
-			case 7:{
+			case 7:
+			{
 				cout<<"所有有猪瘟的猪圈编号:"<<endl; 
 				for(int i=0;i<100;i++)
 					if(vis[i]) cout<<i<<' ';
@@ -667,14 +711,16 @@ int main(){
 				int br=0;
 				while(x<0||x>99)
 				{
-					if(x==-1) {
+					if(x==-1) 
+					{
 						br=1;
 						break;
 					}
 					cout<<"编号不合法,请重新输入(输入-1返回主页面): ";
 					cin>>x;
 				}
-				if(br) {
+				if(br) 
+				{
 					cls();	
 					page();	
 					break;
@@ -686,7 +732,8 @@ int main(){
 				} 
 				break;
 			} 
-			case 8:{
+			case 8:
+			{
 				//保存进文件 
 				freopen("a.txt","w",stdout);
 				cout<<idx<<endl;
