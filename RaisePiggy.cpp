@@ -178,7 +178,7 @@ PigList grow(PigList L,double k) {
 }
 
 //把编号为k的小猪从猪圈中删除 
-void pendel(int x,int k,int t)
+void remove(int x,int k,int t)
 {
 	int n=pigpen[x].sum;//当前猪圈内猪的数量 
 	for(int i=1;i<=n;i++)
@@ -198,9 +198,9 @@ void pendel(int x,int k,int t)
 } 
  
 //删除可以出圈的猪 
-PigList del(PigList L) {
+PigList sell(PigList L) {
     
-    freopen("output.txt","a",stdout);
+    freopen("output.txt","w",stdout);
     
     double money=0;//本次出圈的猪能卖多少钱 
     int f=1;
@@ -227,7 +227,7 @@ PigList del(PigList L) {
 				
 				money+=x*(p->weight);
 				
-				pendel(p->pen,p->id,p->ty);//从猪圈中删除 
+				remove(p->pen,p->id,p->ty);//从猪圈中删除 
 				
 				f=1;//找到了一个可以出圈的,如果没找到,f=0,循环停止 
 				break;
@@ -241,8 +241,8 @@ PigList del(PigList L) {
     for(int i=1;i<=3;i++)
 		cout<<b[i]<<e[i]<<"只,"; 
     cout<<"总售价为："<<money<<endl; 
-    freopen("CON","a",stdout);
-	cout.clear();
+    freopen("CON","w",stdout);
+	cout.clear();//清除缓冲区,缓冲区里可能有字符
     
     gold += money; 
     cout<<"本次出圈的猪总售价为："<<money<<endl; 
@@ -281,7 +281,7 @@ void cla(PigList L,int k)
 		cout<<endl<<endl;
 		return;
 	}
-	cout<<",总重量为"<<w<<"\n其中最小的猪饲养时间为"<<mint<<"天,最大的猪有"
+	cout<<",总重量为"<<w<<"\n其中最小的猪饲养时间为"<<mint<<"天,最大的猪饲养时间为"
 	<<maxt<<"天\n分布的猪圈有 ";
 	for(int i=0;i<100;i++)
 		if(v[i]) cout<<i<<' ';
@@ -296,7 +296,7 @@ void printList(PigList L){
     }
 } 
  
-double a[]={0,5,3,10};
+double a[]={0,400,300,500};
 int main(){
 	time_t t;
 	srand((unsigned) time(&t));
@@ -341,10 +341,10 @@ int main(){
 				    list = grow(list,0.1*x);	
 					if(day%90==0) //三个月了,出圈
 					{
-						del(list);
+						sell(list);
 						cout<<"现有金币数: "<<gold<<endl;
 						cout<<"请选择要购入的小猪: "<<endl;
-						cout<<"1.小花猪(5元一斤) 2.大白花猪(3元一斤) 3.黑猪(10元一斤) 4.取消"<<endl; 
+						cout<<"1.小花猪(400元一只) 2.大白花猪(300元一只) 3.黑猪(500元一只) 4.取消  （ps：商店出售的小猪仔是20-50kg的随机体重嗷~）"<<endl; 
 						cin>>x;
 						while(x>4){
 							cout<<"无效输入,请重新选择: "; 
@@ -356,9 +356,9 @@ int main(){
 							if(a[x]*cnt>gold) cout<<"金币不足!"<<endl;
 							else {
 								
-								freopen("output.txt","a",stdout);
+								freopen("output.txt","w",stdout);
 								cout<<"购入"<<b[x]<<cnt<<"只"<<endl; 
-								freopen("CON","a",stdout);
+								freopen("CON","w",stdout);
 								cout.clear();
 							
 							//	printList(list);
@@ -413,7 +413,7 @@ int main(){
 				string s;
 				while(cin>>s) cout<<s<<endl;
 				freopen("CON", "r", stdin);//输入重定向到控制台
-				cin.clear();;
+				cin.clear();
 				
 				break;
 			}
