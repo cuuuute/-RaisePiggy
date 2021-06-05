@@ -468,8 +468,8 @@ void printList(PigList L)
     int i=0;
     while(p)
 	{
-		cout<<" "<<p->id<<"       "<<p->ty<<"         "<<p->growday<<"       "<<p->weight
-		<<"        "<<p->pen<<"           "<<p->virus<<endl; 
+		cout<<p->id<<"		"<<p->ty<<"		"<<p->growday<<"		"<<p->weight
+		<<"		"<<p->pen<<"		"<<p->virus<<endl; 
         p=p->next;
     }
 } 
@@ -603,8 +603,8 @@ int main()
 	cin.clear();
     cout<<"上次小猪信息"<<endl; 
     
-    cout<<"编号"<<"  "<<"品种编号" <<"  "<<"饲养天数"<<"  "<<"体重"<<"  "
-	<<"所属猪圈编号"<<"  "<<"患病天数(-1为健康小猪猪)" <<endl;
+    cout<<"编号"<<"		"<<"品种编号" <<"	"<<"饲养天数"<<"	"<<"体重"<<"		"
+	<<"所属猪圈编号"<<"	"<<"患病天数(-1为健康小猪猪)" <<endl;
 	
     printList(list);
     cout<<endl;
@@ -615,8 +615,8 @@ int main()
     	PigListInsert(list);
     cout<<"随机放入"<<cnt<<"头小猪后"<<endl;
 	
-	cout<<"编号"<<"  "<<"品种编号" <<"  "<<"饲养天数"<<"  "<<"体重"<<"  "
-	<<"所属猪圈编号"<<"  "<<"患病天数(-1为健康小猪猪)" <<endl;
+	cout<<"编号"<<"		"<<"品种编号" <<"	"<<"饲养天数"<<"	"<<"体重"<<"		"
+	<<"所属猪圈编号"<<"	"<<"患病天数(-1为健康小猪猪)" <<endl;
 	
     printList(list);
 //	page();
