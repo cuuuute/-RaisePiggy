@@ -441,7 +441,6 @@ double a[]={0,400,300,500};//单价
 
 void page()
 {
-	cout<<"\n\n\n\n\n\n\n";
 	cout<<"            ======================================================\n";
 	cout<<'\n';
 	cout<<"                       请选择操作：\n";
@@ -457,6 +456,12 @@ void page()
 	cout<<'\n';
 	cout<<"            ======================================================\n";
 
+}
+
+
+void cls()	//system("cls")清屏函数在我的电脑上发生了应用程序错误（地址为0xc0000142） 
+{			//因此我放弃了使用清屏函数，改用多空几行的解决办法 
+	cout<<"\n\n\n\n\n\n\n";
 }
 
 int main(){
@@ -488,14 +493,14 @@ int main(){
     PigListInsert(list);
     cout<<"随机放入"<<cnt<<"头小猪后"<<endl; 
     printList(list);
-	page();
+//	page();
 	int flag=0;
 	while(1)
 	{					
+		cls();//cout 
+		page();	
 		int op;
 		cin>>op;
-		system("cls");	
-		page();	
 		switch(op){
        		case 1:{
        			cout<<"请输入生长天数: ";
@@ -539,15 +544,15 @@ int main(){
 								gold -= a[x]*cnt;
 								cout<<"购入"<<b[x]<<cnt<<"只,钱包剩余金额为"<<gold<<"元。"<<endl; //文件记录 
 								freopen("CON","a",stdout);
-								cout<<"购入"<<b[x]<<cnt<<"只,钱包剩余金额为"<<gold<<"元。"<<endl;//控制台显示，告诉用户 
 								cout.clear();
+								cout<<"购入"<<b[x]<<cnt<<"只,钱包剩余金额为"<<gold<<"元。"<<endl;//控制台显示，告诉用户 
+								
 							
 							//	printList(list);
 								
 								while(cnt--)
 								{
 									PigListInsert(list,x);
-									
 								}
 						     	
 						     	
@@ -558,22 +563,25 @@ int main(){
 				}
 				break;
 			}
-			case 2:{
+			case 2:
+			{
 				int x;
 				cout<<"请输入猪圈编号：";
    		      	cin>>x;
    		      	int br=0;
 				while(x<0||x>99)
 				{
-					if(x==-1) {
+					if(x==-1) 
+					{
 						br=1;
 						break;
 					}
 					cout<<"编号不合法,请重新输入(输入-1返回主页面): ";
 					cin>>x;
 				}
-				if(br) {
-					system("cls");	
+				if(br==1) 
+				{
+					cls();	
 					page();	
 					break;
 				}
@@ -597,7 +605,7 @@ int main(){
 					cin>>x;
 				}
 				if(br) {
-					system("cls");	
+					cls();	
 					page();	
 					break;
 				}
@@ -616,7 +624,7 @@ int main(){
 					cin>>x;
 				}
 				if(br) {
-					system("cls");	
+					cls();	
 					page();	
 					break;
 				}
@@ -667,7 +675,7 @@ int main(){
 					cin>>x;
 				}
 				if(br) {
-					system("cls");	
+					cls();	
 					page();	
 					break;
 				}
