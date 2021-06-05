@@ -581,6 +581,19 @@ void spreadvirus(PigList list)
 	list=getsick(list,x);//xºÅµÃÖíÎÁ 
 }
 
+//ÅÐ¶ÏÊÇ·ñÊ¤Àû 
+bool judge_win(int m)
+{
+	if(m>=20000)
+	{
+		cout<<"Congratulations!You have earned 20000 yuan.You win!~";
+		return true;
+	}
+		
+	else
+		return false;
+}
+
 int main()
 {
 	time_t t;
@@ -628,7 +641,11 @@ int main()
 
 	while(1)
 	{					
-		cls();//cout 
+		//×¬µ½20000ÔªÍË³öÓÎÏ·À²~ 
+		if(judge_win(gold))
+			return 0;
+			
+		cls();
 		page();	
 		int op;
 		cin>>op;
