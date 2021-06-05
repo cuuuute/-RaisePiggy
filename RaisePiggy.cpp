@@ -6,7 +6,7 @@
 #include<stdlib.h>
 using namespace std;
 
-double money;
+double gold=500;
 int day;
 int cnt,idx=0;
 
@@ -26,6 +26,7 @@ struct PigPen{//猪圈
 	int pigid[11];//每头猪的id 
 }pigpen[111];
 
+string b[]={"","小花猪","大白花猪","黑猪"};
 
 //查找编号为id的猪 
 void find(PigList L,int id){
@@ -111,13 +112,47 @@ PigList PigListInsert(PigList L) {
 		
 		pigpen[p->pen].sum++;//此猪圈内猪的个数增加1 
 	}
-    p->next = pre->next;
+    
     pre->next = p;
- 	
+ 	p->next = NULL;
     return L;
 }
 
-
+//加入固定种类的小猪  
+PigList PigListInsert(PigList L,int k) {
+    Pig *pre;                     
+    pre = L;
+    while( pre->next!=NULL )  
+	  pre = pre->next;     //查找最后一个结点的前驱节点 
+	
+    Pig *p;    //要插入的结点为p
+    p = (Pig *)malloc(sizeof(Pig));
+    p->id = ++idx;//编号 
+	p->ty = k;//种类1-3代表三种猪 
+	p->growday = 0;//初始饲养日期为0 
+	p->weight = rand()%50+20; //随机产生重量 
+	p->pen = getpen(p->ty); //为小猪分配猪圈 
+//	cout<<p->id<<' '<<p->ty<<' '<<p->growday<<' '<<p->weight<<' '<<p->pen<<endl; 
+	if(p->pen==-1) {
+		cout<<"猪圈已满/猪会打架,无法放入！！！"<<endl; 
+		return L;
+	}
+	else 
+	{
+		//小猪加入猪圈 
+		pigpen[p->pen].pigid[pigpen[p->pen].sum]=idx;
+		
+		if(p->ty == 1) pigpen[p->pen].a++;
+		else if(p->ty == 2) pigpen[p->pen].b++;
+		else pigpen[p->pen].c++,pigpen[p->pen].flag=true;
+		
+		pigpen[p->pen].sum++;//此猪圈内猪的个数增加1 
+	}
+    
+    pre->next = p;
+ 	p->next = NULL;
+    return L;
+}
 //链表初始化
 PigList PigListInit() {
     Pig *L;
@@ -129,7 +164,8 @@ PigList PigListInit() {
     L->next = NULL;          //将next设置为NULL,初始长度为0的单链表
     return L;
 }
- //小猪重量增加k千克 
+
+//小猪重量增加k千克 
 PigList grow(PigList L,double k) {
     Pig *p=L->next;
     int i=0;
@@ -163,10 +199,14 @@ void pendel(int x,int k,int t)
  
 //删除可以出圈的猪 
 PigList del(PigList L) {
-   
+    
+    freopen("output.txt","a",stdout);
+    
     double money=0;//本次出圈的猪能卖多少钱 
     int f=1;
-    while(f)
+	int e[5];
+	e[1]=e[2]=e[3]=0;
+    while(1)
 	{       
 	 	Pig *p,*pre;   //pre为前驱结点，p为查找的结点。
     	p = L;
@@ -180,6 +220,7 @@ PigList del(PigList L) {
 			{
 				double x;//单价 
 				
+				e[p->ty]++;
 				if(p->ty==1) x=7;
 				else if(p->ty==2) x=6;
 				else x=15;
@@ -192,10 +233,18 @@ PigList del(PigList L) {
 				break;
 			}		
 		}
+		if(f==0) break;
 		pre->next = p->next;          //删除操作，将其前驱next指向其后继。
   		free(p);
     }
-   
+    cout<<"本次出圈";
+    for(int i=1;i<=3;i++)
+		cout<<b[i]<<e[i]<<"只,"; 
+    cout<<"总售价为："<<money<<endl; 
+    freopen("CON","a",stdout);
+	cout.clear();
+    
+    gold += money; 
     cout<<"本次出圈的猪总售价为："<<money<<endl; 
     return L;
 }
@@ -238,6 +287,16 @@ void cla(PigList L,int k)
 		if(v[i]) cout<<i<<' ';
 	cout<<endl<<endl; 
 }
+void printList(PigList L){
+    Pig *p=L->next;
+    int i=0;
+    while(p){
+        cout<<p->id<<' '<<p->ty<<' '<<p->growday<<' '<<p->weight<<' '<<p->pen<<endl; 
+        p=p->next;
+    }
+} 
+ 
+double a[]={0,5,3,10};
 int main(){
 	time_t t;
 	srand((unsigned) time(&t));
@@ -250,17 +309,19 @@ int main(){
 	//cout<<cnt<<endl;
 	for(int i=1;i<=cnt;i++)
     PigListInsert(list);
+    
     	
 	cout<<"\n\n\n\n\n\n\n";
 	cout<<"            ======================================================\n";
 	cout<<'\n';
 	cout<<"                       请选择操作：\n";
 	cout<<'\n';
-	cout<<"                            1.下一天\n";		
+	cout<<"                            1.小猪成长\n";		
 	cout<<"                            2.查询某猪圈猪的数量和种类\n";
 	cout<<"                            3.查询某猪圈某头猪的状态信息\n";
 	cout<<"                            4.统计每种猪的数量、体重、饲养时间分布情况\n";
-	cout<<"                            5.退出\n";
+	cout<<"                            5.查询销售记录和购入记录\n";
+	cout<<"                            6.退出\n";
 	cout<<'\n';
 	cout<<"            ======================================================\n";
 
@@ -270,18 +331,50 @@ int main(){
 		cin>>op;
 		switch(op){
        		case 1:{
-       			day++;
-       			int x=rand()%12;
-			    list = grow(list,0.1*x);	
-				if(day%90==0) //三个月了,出圈
-				{
-					del(list);
-					//放入新的小猪 
-					cnt=rand()%5+1;
-					for(int i=1;i<=cnt;i++)
-				     	PigListInsert(list);
-					
-				}    	  	
+       			cout<<"请输入生长天数: ";
+				int x;
+				cin>>x;
+				for(int i=1;i<=x;i++) 
+       			{
+	       			day++;
+	       			int x=rand()%12;
+				    list = grow(list,0.1*x);	
+					if(day%90==0) //三个月了,出圈
+					{
+						del(list);
+						cout<<"现有金币数: "<<gold<<endl;
+						cout<<"请选择要购入的小猪: "<<endl;
+						cout<<"1.小花猪(5元一斤) 2.大白花猪(3元一斤) 3.黑猪(10元一斤) 4.取消"<<endl; 
+						cin>>x;
+						while(x>4){
+							cout<<"无效输入,请重新选择: "; 
+							cin>>x;
+						} 
+						if(x>=1&&x<=3){
+							cout<<"请输入要购入的小猪数量: "; 
+							cin>>cnt;//=rand()%5+1;
+							if(a[x]*cnt>gold) cout<<"金币不足!"<<endl;
+							else {
+								
+								freopen("output.txt","a",stdout);
+								cout<<"购入"<<b[x]<<cnt<<"只"<<endl; 
+								freopen("CON","a",stdout);
+								cout.clear();
+							
+							//	printList(list);
+								gold -= a[x]*cnt;
+								while(cnt--)
+								{
+									PigListInsert(list,x);
+									
+								}
+						     	
+						     	
+							} 
+						}  
+						
+					}  
+				}
 				break;
 			}
 			case 2:{
@@ -316,6 +409,16 @@ int main(){
 				break;
 			} 
 			case 5:{
+				freopen("output.txt","r",stdin);
+				string s;
+				while(cin>>s) cout<<s<<endl;
+				freopen("CON", "r", stdin);//输入重定向到控制台
+				cin.clear();;
+				
+				break;
+			}
+				
+			case 6:{
 				return 0;
 			}
 			default:break;
