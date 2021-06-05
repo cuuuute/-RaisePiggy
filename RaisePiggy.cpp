@@ -439,6 +439,25 @@ void printList(PigList L){
 
 double a[]={0,400,300,500};//单价 
 
+void page()
+{
+	cout<<"\n\n\n\n\n\n\n";
+	cout<<"            ======================================================\n";
+	cout<<'\n';
+	cout<<"                       请选择操作：\n";
+	cout<<'\n';
+	cout<<"                            1.小猪成长\n";		
+	cout<<"                            2.查询某猪圈猪的数量和种类\n";
+	cout<<"                            3.查询某猪圈某头猪的状态信息\n";
+	cout<<"                            4.统计每种猪的数量、体重、饲养时间分布情况\n";
+	cout<<"                            5.查询销售记录和购入记录\n";
+	cout<<"                            6.产生猪瘟\n";
+	cout<<"                            7.防控\n";
+	cout<<"                            8.退出\n";
+	cout<<'\n';
+	cout<<"            ======================================================\n";
+
+}
 
 int main(){
 	time_t t;
@@ -469,27 +488,14 @@ int main(){
     PigListInsert(list);
     cout<<"随机放入"<<cnt<<"头小猪后"<<endl; 
     printList(list);
-		
-	cout<<"\n\n\n\n\n\n\n";
-	cout<<"            ======================================================\n";
-	cout<<'\n';
-	cout<<"                       请选择操作：\n";
-	cout<<'\n';
-	cout<<"                            1.小猪成长\n";		
-	cout<<"                            2.查询某猪圈猪的数量和种类\n";
-	cout<<"                            3.查询某猪圈某头猪的状态信息\n";
-	cout<<"                            4.统计每种猪的数量、体重、饲养时间分布情况\n";
-	cout<<"                            5.查询销售记录和购入记录\n";
-	cout<<"                            6.产生猪瘟\n";
-	cout<<"                            7.防控\n";
-	cout<<"                            8.退出\n";
-	cout<<'\n';
-	cout<<"            ======================================================\n";
+	page();
 	int flag=0;
 	while(1)
-	{				
+	{					
 		int op;
 		cin>>op;
+		system("cls");	
+		page();	
 		switch(op){
        		case 1:{
        			cout<<"请输入生长天数: ";
@@ -556,7 +562,23 @@ int main(){
 				int x;
 				cout<<"请输入猪圈编号：";
    		      	cin>>x;
-   		      	cout<<"此猪圈有"<<pigpen[x].sum<<"头猪，其中有黑猪"<<pigpen[x].c<<"头，小花猪"<<pigpen[x].a<<"头，大白花猪"<<pigpen[x].b<<"头\n\n";
+   		      	int br=0;
+				while(x<0||x>99)
+				{
+					if(x==-1) {
+						br=1;
+						break;
+					}
+					cout<<"编号不合法,请重新输入(输入-1返回主页面): ";
+					cin>>x;
+				}
+				if(br) {
+					system("cls");	
+					page();	
+					break;
+				}
+   		      	cout<<"此猪圈有"<<pigpen[x].sum<<"头猪，其中有黑猪"<<pigpen[x].c
+				<<"头，小花猪"<<pigpen[x].a<<"头，大白花猪"<<pigpen[x].b<<"头\n\n";
 
 				break;
 			}
@@ -564,17 +586,42 @@ int main(){
 				int x;
 				cout<<"请输入猪圈编号：";
    		      	cin>>x;
-   		      	cout<<"此猪圈有"<<pigpen[x].sum<<"头猪,请输入猪的编号: ";
-				
-				int y;
-				cin>>y;
-				while(y<0||y>=pigpen[x].sum)  
+   		      	int br=0;
+				while(x<0||x>99)
 				{
-					cout<<"编号不合法,请重新输入: ";
-					cin>>y;
+					if(x==-1) {
+						br=1;
+						break;
+					}
+					cout<<"编号不合法,请重新输入(输入-1返回主页面): ";
+					cin>>x;
+				}
+				if(br) {
+					system("cls");	
+					page();	
+					break;
+				}
+   		      	
+   		      	cout<<"此猪圈有"<<pigpen[x].sum<<"头猪,请输入猪的编号: ";
+				int y=x;
+				br=0;
+				cin>>x;
+				while(x<0||x>=pigpen[y].sum)
+				{
+					if(x==-1) {
+						br=1;
+						break;
+					}
+					cout<<"编号不合法,请重新输入(输入-1返回主页面): ";
+					cin>>x;
+				}
+				if(br) {
+					system("cls");	
+					page();	
+					break;
 				}
 				//cout<<pigpen[x].pigid[y]<<endl;
-				find(list,pigpen[x].pigid[y]);
+				find(list,pigpen[y].pigid[x]);
 				break;
 			}
 			case 4:{
@@ -588,7 +635,7 @@ int main(){
 				string s;
 				while(cin>>s) cout<<s<<endl;
 				freopen("CON", "r", stdin);//输入重定向到控制台
-				cin.clear();;
+				cin.clear();
 				
 				break;
 			}
@@ -609,10 +656,20 @@ int main(){
 				cout<<"请输入要杀死的猪圈编号：";
 				int x;
 				cin>>x;
+				int br=0;
 				while(x<0||x>99)
 				{
-					cout<<"编号不合法,请重新输入: ";
+					if(x==-1) {
+						br=1;
+						break;
+					}
+					cout<<"编号不合法,请重新输入(输入-1返回主页面): ";
 					cin>>x;
+				}
+				if(br) {
+					system("cls");	
+					page();	
+					break;
 				}
 				for(int i=0;i<pigpen[x].sum;i++)
 				{
@@ -640,6 +697,7 @@ int main(){
 	
 	return 0;
 } 
+
 
 
 
