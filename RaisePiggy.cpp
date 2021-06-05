@@ -157,6 +157,7 @@ PigList PigListInsert(PigList L,int k) {
     return L;
 }
 
+//加入一只完全已知的猪猪 
 PigList Insert(PigList L,int id,int ty,int growday,int weight,int pen,int vr) {
     Pig *pre;                     
     pre = L;
@@ -197,7 +198,9 @@ PigList PigListInit() {
     L->next = NULL;          //将next设置为NULL,初始长度为0的单链表
     return L;
 }
-bool vis[111],v[1111];//猪圈是否被感染,猪是否死亡 
+
+bool vis[111];//猪圈感染名单，猪圈是否被感染
+bool v[1111];//猪猪死亡名单，猪是否死亡 
  
 //经过一天小猪重量增加k千克 
 PigList grow(PigList L,double k) {
@@ -220,7 +223,7 @@ PigList grow(PigList L,double k) {
 }
 
 //把编号为k的小猪从猪圈中删除 
-void pendel(int x,int k,int t,int f)
+void remove(int x,int k,int t,int f)
 {
 	int n=pigpen[x].sum;//当前猪圈内猪的数量 
 	for(int i=0;i<n;i++)
@@ -242,8 +245,8 @@ void pendel(int x,int k,int t,int f)
 	
 } 
  
-//删除可以出圈的猪 
-PigList del(PigList L) {
+//出售所有可以出圈的猪 
+PigList sell(PigList L) {
     
     freopen("output.txt","a",stdout);
     
@@ -272,7 +275,7 @@ PigList del(PigList L) {
 				
 				money+=x*(p->weight);
 				
-				pendel(p->pen,p->id,p->ty,0);//从猪圈中删除 
+				remove(p->pen,p->id,p->ty,0);//从猪圈中删除 
 				
 				f=1;//找到了一个可以出圈的,如果没找到,f=0,循环停止 
 				break;
@@ -295,7 +298,7 @@ PigList del(PigList L) {
 }
 
 //删除死亡猪 
-PigList del(PigList L,int x) {
+PigList remove(PigList L,int x) {
       
  	Pig *p,*pre;   //pre为前驱结点，p为查找的结点。
 	p = L;
@@ -307,7 +310,7 @@ PigList del(PigList L,int x) {
 	    if(p->id==x)
 		{			
 			v[p->id]=0;	
-			pendel(p->pen,p->id,p->ty,1);//从猪圈中删除 
+			remove(p->pen,p->id,p->ty,1);//从猪圈中删除 
 			pre->next = p->next;          //删除操作，将其前驱next指向其后继。
   			free(p);	
 			break;					
@@ -418,7 +421,7 @@ PigList viru(PigList L)
 	{
 		if(v[i]) 
 		{
-			L=del(L,i);
+			L=remove(L,i);
 		}
 	} 
 	return L; 
@@ -433,7 +436,10 @@ void printList(PigList L){
     }
 } 
 
-double a[]={0,5,3,10};
+
+double a[]={0,400,300,500};//单价 
+
+
 int main(){
 	time_t t;
 	srand((unsigned) time(&t));
@@ -508,10 +514,10 @@ int main(){
 				    if(start&&flag&&cnt==0) flag=0,cout<<"距离猪瘟开始"<<day-start<<"天，猪圈的猪猪已全部GG！"<<endl; 
 					if(day%90==0) //三个月了,出圈
 					{
-						del(list);
+						sell(list);
 						cout<<"现有金币数: "<<gold<<endl;
 						cout<<"请选择要购入的小猪: "<<endl;
-						cout<<"1.小花猪(5元一斤) 2.大白花猪(3元一斤) 3.黑猪(10元一斤) 4.取消"<<endl; 
+						cout<<"1.小花猪(400元一只) 2.大白花猪(300元一只) 3.黑猪(500元一只) 4.取消  （ps：商店出售的小猪仔是20-50kg的随机体重嗷~）"<<endl; 
 						cin>>x;
 						while(x>4){
 							cout<<"无效输入,请重新选择: "; 
@@ -524,12 +530,14 @@ int main(){
 							else {
 								
 								freopen("output.txt","a",stdout);
-								cout<<"购入"<<b[x]<<cnt<<"只"<<endl; 
+								gold -= a[x]*cnt;
+								cout<<"购入"<<b[x]<<cnt<<"只,钱包剩余金额为"<<gold<<"元。"<<endl; //文件记录 
 								freopen("CON","a",stdout);
+								cout<<"购入"<<b[x]<<cnt<<"只,钱包剩余金额为"<<gold<<"元。"<<endl;//控制台显示，告诉用户 
 								cout.clear();
 							
 							//	printList(list);
-								gold -= a[x]*cnt;
+								
 								while(cnt--)
 								{
 									PigListInsert(list,x);
@@ -609,7 +617,7 @@ int main(){
 				for(int i=0;i<pigpen[x].sum;i++)
 				{
 					int id=pigpen[x].pigid[i];
-					list=del(list,id);
+					list=remove(list,id);
 				} 
 				break;
 			} 
