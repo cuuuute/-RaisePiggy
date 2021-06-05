@@ -1,3 +1,4 @@
+#include<bits/stdc++.h> 
 #include<iostream>
 #include<fstream>
 #include<string>
@@ -7,7 +8,7 @@
 
 using namespace std;
 
-double gold=500;
+double gold=500;//钱包余额金币数量 
 int day;
 int cnt,idx=0,start;
 int pigill=0;
@@ -19,12 +20,12 @@ typedef struct Pig//猪
 	int growday;//饲养日期 
 	double weight;//重量 
 	int pen;//在几号猪圈 
-	int virus; 
+	int virus; //>=0为得病，<0为健康，其绝对值大小为发病天数（发病有传染力，当virus=0时为潜伏期，无传染力） 
 	struct Pig *next;
 }Pig,*PigList;
 
 struct PigPen//猪圈
-{ 
+{
 	int sum;//有多少头猪
 	int a,b,c;//小花猪、大白花猪、黑猪的数量 
 	bool flag;//是否有黑猪 
@@ -32,6 +33,7 @@ struct PigPen//猪圈
 }pigpen[111];
 
 string b[]={"","小花猪","大白花猪","黑猪"};
+double a[]={0,400,300,500};//单价 
 
 //查找编号为id的猪 
 void find(PigList L,int id)
@@ -267,7 +269,7 @@ void remove(int x,int k,int t,int f)
 PigList sell(PigList L) 
 {
     
-    freopen("output.txt","a",stdout);
+    freopen("market_record.txt","a",stdout);
     
     double money=0;//本次出圈的猪能卖多少钱 
     int f=1;
@@ -475,7 +477,7 @@ void printList(PigList L)
 } 
 
 
-double a[]={0,400,300,500};//单价 
+
 
 //主界面显示 
 void page()
@@ -518,7 +520,7 @@ void buy(PigList list,int x)
 		if(a[x]*cnt>gold) cout<<"金币不足!"<<endl;
 		else 
 		{
-			freopen("output.txt","a",stdout);
+			freopen("market_record.txt","a",stdout);
 			gold -= a[x]*cnt;
 			cout<<"购入"<<b[x]<<cnt<<"只,钱包剩余金额为"<<gold<<"元。"<<endl; //文件记录 
 			freopen("CON","a",stdout);
@@ -637,7 +639,7 @@ int main()
 	}
 	
 
-//	page();
+
 
 	while(1)
 	{					
