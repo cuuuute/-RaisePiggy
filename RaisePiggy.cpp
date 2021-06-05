@@ -9,6 +9,7 @@ using namespace std;
 double gold=500;
 int day;
 int cnt,idx=0,start;
+int pigill=0;
 
 typedef struct Pig//猪 
 { 
@@ -395,8 +396,9 @@ int ask(PigList L,int x)
     }
     return 0;
 }
+
 //id为x的猪标记为生病 
-PigList replace(PigList L,int x) 
+PigList getsick(PigList L,int x) 
 {
     Pig *p=L->next;
     int i=0;
@@ -411,6 +413,8 @@ PigList replace(PigList L,int x)
     }
     return L;
 }
+
+//猪瘟传播 
 PigList viru(PigList L)
 {
 	
@@ -424,7 +428,7 @@ PigList viru(PigList L)
 				int id=pigpen[i].pigid[j];
 				int pp=rand()%100+1;
 				if(pp<=50) 
-					replace(L,id);
+					getsick(L,id);
 			}
 			//相邻猪圈15%几率传染
 			if(i-1>=0)
@@ -433,7 +437,7 @@ PigList viru(PigList L)
 					int id=pigpen[i-1].pigid[j];
 					int pp=rand()%100+1;
 					if(pp<=15) 
-						replace(L,id);
+						getsick(L,id);
 				}
 			if(i+1>=0)
 				for(int j=0;j<pigpen[i+1].sum;j++)
@@ -441,7 +445,7 @@ PigList viru(PigList L)
 					int id=pigpen[i+1].pigid[j];
 					int pp=rand()%100+1;
 					if(pp<=15) 
-						replace(L,id);
+						getsick(L,id);
 				}
 		}
 	}
@@ -455,6 +459,8 @@ PigList viru(PigList L)
 	} 
 	return L; 
 }
+
+//打印链表里的猪信息 
 void printList(PigList L)
 {
     Pig *p=L->next;
@@ -470,6 +476,7 @@ void printList(PigList L)
 
 double a[]={0,400,300,500};//单价 
 
+//主界面显示 
 void page()
 {
 	cout<<"            ======================================================\n";
@@ -483,16 +490,94 @@ void page()
 	cout<<"                            5.查询销售记录和购入记录\n";
 	cout<<"                            6.产生猪瘟\n";
 	cout<<"                            7.防控\n";
-	cout<<"                            8.退出\n";
+	cout<<"                            8.保存并退出\n";
 	cout<<'\n';
 	cout<<"            ======================================================\n";
 
 }
 
-
+//伪清屏 
 void cls()							//system("cls")清屏函数在我的电脑上发生了应用程序错误（地址为0xc0000142） 
 {									//因此我放弃了使用清屏函数，改用多空几行的解决办法 
 	cout<<"\n\n\n\n\n\n\n";
+}
+
+//购买x只小猪
+void buy(PigList list,int x) 
+{
+	while(x>4||x<=0) 
+	{
+		cout<<"无效输入,请重新选择: "; 
+		cin>>x;
+	} 
+	if(x>=1&&x<=3)
+	{
+		cout<<"请输入要购入的小猪数量: "; 
+		cin>>cnt;//=rand()%5+1;
+		if(a[x]*cnt>gold) cout<<"金币不足!"<<endl;
+		else 
+		{
+			freopen("output.txt","a",stdout);
+			gold -= a[x]*cnt;
+			cout<<"购入"<<b[x]<<cnt<<"只,钱包剩余金额为"<<gold<<"元。"<<endl; //文件记录 
+			freopen("CON","a",stdout);
+			cout.clear();
+			cout<<"购入"<<b[x]<<cnt<<"只,钱包剩余金额为"<<gold<<"元。"<<endl;//控制台显示，告诉用户 
+			//	printList(list);
+			while(cnt--)
+			{
+				PigListInsert(list,x);
+			}
+		} 
+	}  
+}
+
+//生长x天 
+void growday(PigList list,int x)
+{
+	for(int i=1;i<=x;i++) 
+    {
+	    day++;
+	    int x=rand()%12;
+		list = grow(list,0.1*x);
+		//  printList(list);
+		//  cout<<endl; 
+		list = viru(list);//检查是否有猪瘟,若有则调用传播函数		
+		//	cout<<"传播："<<endl; 
+		//	printList(list);
+		Pig *p=list->next;
+		 int cnt=0;
+		while(p)
+		{
+		 	cnt++;
+			p=p->next;
+		}
+		if(start&&pigill&&cnt==0) 
+		{
+			pigill=0;
+			cout<<"距离猪瘟开始"<<day-start<<"天，猪圈的猪猪已全部GG！"<<endl;
+		} 
+		if(day%90==0) //三个月了,出圈
+		{
+			sell(list);
+			cout<<"现有金币数: "<<gold<<endl;
+			cout<<"请选择要购入的小猪: "<<endl;
+			cout<<"1.小花猪(400元一只) 2.大白花猪(300元一只) 3.黑猪(500元一只) 4.取消  （ps：商店出售的小猪仔是20-50kg的随机体重嗷~）"<<endl; 
+			cin>>x;
+			buy(list,x);			
+		}
+	}
+}
+ 
+//产生猪瘟 
+void spreadvirus(PigList list)
+{
+	int x=rand()%idx+1;
+	while(ask(list,x)==0)
+		x=rand()%idx;
+	start=day;
+	pigill=1;//猪瘟模式开启 
+	list=getsick(list,x);//x号得猪瘟 
 }
 
 int main()
@@ -505,7 +590,7 @@ int main()
     list = PigListInit();
     
     //读取上次数据
-	freopen("a.txt","r",stdin);
+	freopen("in.txt","r",stdin);
 	cin>>idx;
 	int id,ty,gr,pe,vr;
 	double we;
@@ -522,11 +607,11 @@ int main()
 	cnt=rand()%10+1;
 	//cout<<cnt<<endl;
 	for(int i=1;i<=cnt;i++)
-    PigListInsert(list);
+    	PigListInsert(list);
     cout<<"随机放入"<<cnt<<"头小猪后"<<endl; 
     printList(list);
 //	page();
-	int flag=0;
+
 	while(1)
 	{					
 		cls();//cout 
@@ -540,62 +625,7 @@ int main()
        			cout<<"请输入生长天数: ";
 				int x;
 				cin>>x;
-				for(int i=1;i<=x;i++) 
-       			{
-	       			day++;
-	       			int x=rand()%12;
-				    list = grow(list,0.1*x);
-				  //  printList(list);
-				  //  cout<<endl; 
-					list = viru(list);//检查是否有猪瘟		
-				//	cout<<"传播："<<endl; 
-				//	printList(list);
-					Pig *p=list->next;
-				    int cnt=0;
-				    while(p)
-					{
-				        cnt++;
-				        p=p->next;
-				    }
-				    if(start&&flag&&cnt==0) flag=0,cout<<"距离猪瘟开始"<<day-start<<"天，猪圈的猪猪已全部GG！"<<endl; 
-					if(day%90==0) //三个月了,出圈
-					{
-						sell(list);
-						cout<<"现有金币数: "<<gold<<endl;
-						cout<<"请选择要购入的小猪: "<<endl;
-						cout<<"1.小花猪(400元一只) 2.大白花猪(300元一只) 3.黑猪(500元一只) 4.取消  （ps：商店出售的小猪仔是20-50kg的随机体重嗷~）"<<endl; 
-						cin>>x;
-						while(x>4)
-						{
-							cout<<"无效输入,请重新选择: "; 
-							cin>>x;
-						} 
-						if(x>=1&&x<=3)
-						{
-							cout<<"请输入要购入的小猪数量: "; 
-							cin>>cnt;//=rand()%5+1;
-							if(a[x]*cnt>gold) cout<<"金币不足!"<<endl;
-							else 
-							{
-								
-								freopen("output.txt","a",stdout);
-								gold -= a[x]*cnt;
-								cout<<"购入"<<b[x]<<cnt<<"只,钱包剩余金额为"<<gold<<"元。"<<endl; //文件记录 
-								freopen("CON","a",stdout);
-								cout.clear();
-								cout<<"购入"<<b[x]<<cnt<<"只,钱包剩余金额为"<<gold<<"元。"<<endl;//控制台显示，告诉用户 
-							//	printList(list);
-								while(cnt--)
-								{
-									PigListInsert(list,x);
-								}
-						     	
-						     	
-							} 
-						}  
-						
-					}  
-				}
+				growday(list,x);
 				break;
 			}
 			case 2:
@@ -689,14 +719,10 @@ int main()
 				
 				break;
 			}
-			case 6:
+			case 6://产生猪瘟 
 			{
-				int x=rand()%idx+1;
-				while(ask(list,x)==0)
-					x=rand()%idx;
-				start=day;
-				flag=1;
-				list=replace(list,x);//x号得猪瘟 
+				spreadvirus(list);
+				cout<<"猪瘟已开始悄悄地在某只猪猪身上传播！"; 
 				break;
 			}	
 			case 7:
