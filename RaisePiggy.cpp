@@ -608,17 +608,22 @@ int main()
 	
     printList(list);
     cout<<endl;
- 	//随机放入cnt头小猪 
-	cnt=rand()%10+1;
-	//cout<<cnt<<endl;
-	for(int i=1;i<=cnt;i++)
+    
+ 	//若没有读取到pigdata.txt，则随机放入cnt头小猪 
+	if(idx==0)
+	{
+		cnt=rand()%10+1;
+		//cout<<cnt<<endl;
+		for(int i=1;i<=cnt;i++)
     	PigListInsert(list);
-    cout<<"随机放入"<<cnt<<"头小猪后"<<endl;
+    	cout<<"由于上一次游戏未按8保存并退出，因此本局游戏随机放入"<<cnt<<"头小猪"<<endl;
 	
-	cout<<"编号"<<"		"<<"品种编号" <<"	"<<"饲养天数"<<"	"<<"体重"<<"		"
-	<<"所属猪圈编号"<<"	"<<"患病天数(-1为健康小猪猪)" <<endl;
+		cout<<"编号"<<"		"<<"品种编号" <<"	"<<"饲养天数"<<"	"<<"体重"<<"		"
+		<<"所属猪圈编号"<<"	"<<"患病天数(-1为健康小猪猪)" <<endl;
+		printList(list);
+	}
 	
-    printList(list);
+
 //	page();
 
 	while(1)
