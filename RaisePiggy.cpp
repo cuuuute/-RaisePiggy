@@ -297,6 +297,7 @@ void printList(PigList L){
 } 
  
 double a[]={0,400,300,500};
+
 int main(){
 	time_t t;
 	srand((unsigned) time(&t));
