@@ -8,7 +8,7 @@ using namespace std;
 
 double gold=500;
 int day;
-int cnt,idx=0;
+int cnt,idx=0,start;
 
 typedef struct Pig{ //猪 
 	int id;//编号 
@@ -220,14 +220,14 @@ PigList grow(PigList L,double k) {
 }
 
 //把编号为k的小猪从猪圈中删除 
-void pendel(int x,int k,int t)
+void pendel(int x,int k,int t,int f)
 {
 	int n=pigpen[x].sum;//当前猪圈内猪的数量 
 	for(int i=0;i<n;i++)
 	{
 		if(pigpen[x].pigid[i]==k)//查找到了 
 		{
-			cout<<x<<"号猪圈有小猪死亡！"<<endl; 
+			if(f) cout<<x<<"号猪圈有小猪死亡！"<<endl; 
 			for(int j=i;j<=n;j++)//后面的编号都前移一位 
 				pigpen[x].pigid[j]=pigpen[x].pigid[j+1];
 			break;
@@ -272,7 +272,7 @@ PigList del(PigList L) {
 				
 				money+=x*(p->weight);
 				
-				pendel(p->pen,p->id,p->ty);//从猪圈中删除 
+				pendel(p->pen,p->id,p->ty,0);//从猪圈中删除 
 				
 				f=1;//找到了一个可以出圈的,如果没找到,f=0,循环停止 
 				break;
@@ -307,7 +307,7 @@ PigList del(PigList L,int x) {
 	    if(p->id==x)
 		{			
 			v[p->id]=0;	
-			pendel(p->pen,p->id,p->ty);//从猪圈中删除 
+			pendel(p->pen,p->id,p->ty,1);//从猪圈中删除 
 			pre->next = p->next;          //删除操作，将其前驱next指向其后继。
   			free(p);	
 			break;					
@@ -386,11 +386,13 @@ PigList viru(PigList L)
 	for(int i=0;i<100;i++)
 	{
 		if(vis[i]){
-			//本猪圈全部传染 
+			//本猪圈50%几率传染 
 			for(int j=0;j<pigpen[i].sum;j++)
 			{
 				int id=pigpen[i].pigid[j];
-				replace(L,id);
+				int pp=rand()%100+1;
+				if(pp<=50) 
+					replace(L,id);
 			}
 			//相邻猪圈15%几率传染
 			if(i-1>=0)
@@ -477,7 +479,7 @@ int main(){
 	cout<<"                            8.退出\n";
 	cout<<'\n';
 	cout<<"            ======================================================\n";
-
+	int flag=0;
 	while(1)
 	{				
 		int op;
@@ -503,7 +505,7 @@ int main(){
 				        cnt++;
 				        p=p->next;
 				    }
-				    if(cnt==0) cout<<"猪全部死亡！"<<endl; 
+				    if(start&&flag&&cnt==0) flag=0,cout<<"距离猪瘟开始"<<day-start<<"天，猪圈的猪猪已全部GG！"<<endl; 
 					if(day%90==0) //三个月了,出圈
 					{
 						del(list);
@@ -586,6 +588,8 @@ int main(){
 				int x=rand()%idx+1;
 				while(ask(list,x)==0)
 					x=rand()%idx;
+				start=day;
+				flag=1;
 				list=replace(list,x);//x号得猪瘟 
 				break;
 			}	
