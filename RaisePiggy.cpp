@@ -4,6 +4,7 @@
 #include<set>
 #include<time.h>
 #include<stdlib.h>
+
 using namespace std;
 
 double gold=500;
@@ -467,8 +468,8 @@ void printList(PigList L)
     int i=0;
     while(p)
 	{
-        cout<<p->id<<' '<<p->ty<<' '<<p->growday
-		<<' '<<p->weight<<' '<<p->pen<<' '<<p->virus<<endl; 
+		cout<<" "<<p->id<<"       "<<p->ty<<"         "<<p->growday<<"       "<<p->weight
+		<<"        "<<p->pen<<"           "<<p->virus<<endl; 
         p=p->next;
     }
 } 
@@ -590,7 +591,7 @@ int main()
     list = PigListInit();
     
     //读取上次数据
-	freopen("in.txt","r",stdin);
+	freopen("pigdata.txt","r",stdin);
 	cin>>idx;
 	int id,ty,gr,pe,vr;
 	double we;
@@ -601,6 +602,10 @@ int main()
 	freopen("CON","r",stdin);
 	cin.clear();
     cout<<"上次小猪信息"<<endl; 
+    
+    cout<<"编号"<<"  "<<"品种编号" <<"  "<<"饲养天数"<<"  "<<"体重"<<"  "
+	<<"所属猪圈编号"<<"  "<<"患病天数(-1为健康小猪猪)" <<endl;
+	
     printList(list);
     cout<<endl;
  	//随机放入cnt头小猪 
@@ -608,7 +613,11 @@ int main()
 	//cout<<cnt<<endl;
 	for(int i=1;i<=cnt;i++)
     	PigListInsert(list);
-    cout<<"随机放入"<<cnt<<"头小猪后"<<endl; 
+    cout<<"随机放入"<<cnt<<"头小猪后"<<endl;
+	
+	cout<<"编号"<<"  "<<"品种编号" <<"  "<<"饲养天数"<<"  "<<"体重"<<"  "
+	<<"所属猪圈编号"<<"  "<<"患病天数(-1为健康小猪猪)" <<endl;
+	
     printList(list);
 //	page();
 
@@ -711,7 +720,7 @@ int main()
 			} 
 			case 5:
 			{
-				freopen("output.txt","r",stdin);
+				freopen("market_record.txt","r",stdin);
 				string s;
 				while(cin>>s) cout<<s<<endl;
 				freopen("CON", "r", stdin);//输入重定向到控制台
@@ -761,7 +770,7 @@ int main()
 			case 8:
 			{
 				//保存进文件 
-				freopen("a.txt","w",stdout);
+				freopen("pigdata.txt","w",stdout);
 				cout<<idx<<endl;
 				printList(list);
 				freopen("CON","a",stdout);
