@@ -47,7 +47,7 @@ void find(PigList L,int id){
 } 
  
 //为新增小猪分配猪圈 
-int getpen(int k)//k为品种编号 
+int getpen(int k)
 {
 	int x=-1;
 	//小花猪,大白花猪
@@ -103,7 +103,7 @@ PigList PigListInsert(PigList L) {
 	else 
 	{
 		//小猪加入猪圈 
-		pigpen[p->pen].pigid[pigpen[p->pen].sum]=idx;//////////////////////////
+		pigpen[p->pen].pigid[pigpen[p->pen].sum]=idx;
 		
 		if(p->ty == 1) pigpen[p->pen].a++;
 		else if(p->ty == 2) pigpen[p->pen].b++;
@@ -121,11 +121,11 @@ PigList PigListInsert(PigList L) {
 //链表初始化
 PigList PigListInit() {
     Pig *L;
-    L = (Pig *)malloc(sizeof(Pig));   //申请结点空间			//////////////////////////
-    if(L==NULL){    //判断申请空间是否失败						//////////////////////////
-    	cout<<"申请空间失败!"<<endl; 							//////////////////////////
-        exit(0);    //如果失败则退出程序						//////////////////////////
-    }															//////////////////////////
+    L = (Pig *)malloc(sizeof(Pig));   //申请结点空间
+    if(L==NULL){    //判断申请空间是否失败
+    	cout<<"申请空间失败!"<<endl; 
+        exit(0);    //如果失败则退出程序
+    }
     L->next = NULL;          //将next设置为NULL,初始长度为0的单链表
     return L;
 }
@@ -141,7 +141,7 @@ PigList grow(PigList L,double k) {
     return L;
 }
 
-//把编号为k的小猪从x号猪圈中删除 
+//把编号为k的小猪从猪圈中删除 
 void pendel(int x,int k,int t)
 {
 	int n=pigpen[x].sum;//当前猪圈内猪的数量 
@@ -206,7 +206,7 @@ void cla(PigList L,int k)
 	int s=0;//数量
 	double w=0;//体重
 	int mint=10000,maxt=0;//时间
-	set<int> st;//猪圈分布 /////////////////////////////////////// 
+	int v[111]={0};//猪圈分布 
 	Pig *p=L->next;
 	if(p==NULL) {
 		cout<<"猪圈中没有此类猪!!!"<<endl; 
@@ -218,7 +218,7 @@ void cla(PigList L,int k)
     	if(p->ty==k) {
     		s++;//数量加一 
     		w+=p->weight;//总重量增加 
-    		st.insert(p->pen);//把它所在猪圈的编号放入答案中 
+    		v[p->pen]=1;//标记它所在猪圈的编号
     		mint=min(mint,p->growday);//最小的猪 
     		maxt=max(maxt,p->growday);//最大的猪 
     	} 
@@ -234,9 +234,8 @@ void cla(PigList L,int k)
 	}
 	cout<<",总重量为"<<w<<"\n其中最小的猪饲养时间为"<<mint<<"天,最大的猪有"
 	<<maxt<<"天\n分布的猪圈有 ";
-	set<int>::iterator it=st.begin();
-	for(;it!=st.end();it++)
-		cout<<*(it)<<' ';
+	for(int i=0;i<100;i++)
+		if(v[i]) cout<<i<<' ';
 	cout<<endl<<endl; 
 }
 int main(){
